@@ -4,9 +4,9 @@ grafana:
   #image: grafana/grafana:5.4.4
   #image: grafana/grafana:4.6.3
   ports:
-    - "3000:3000"
+    - "3001:3000"
   volumes:
-    - ./:/var/lib/grafana/plugins/grafana-piechart-panel
+    - ./:/var/lib/grafana/plugins/grafana-linechart-panel
     - ./provisioning:/etc/grafana/provisioning
   environment:
     - TERM=linux

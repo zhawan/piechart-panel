@@ -21,7 +21,8 @@ class PieChartCtrl extends MetricsPanelCtrl {
     this.hiddenSeries = {};
 
     const panelDefaults = {
-      pieType: 'pie',
+      x_axis: 'ep',
+      // pieType: 'pie',
       legend: {
         show: true, // disable/enable legend
         values: true,
@@ -34,11 +35,11 @@ class PieChartCtrl extends MetricsPanelCtrl {
       cacheTimeout: null,
       nullPointMode: 'connected',
       legendType: 'Under graph',
-      breakPoint: '50%',
+      breakPoint: '10%',
       aliasColors: {},
-      format: 'short',
-      valueName: 'current',
-      strokeWidth: 1,
+      // format: 'short',
+      // valueName: 'current',
+      // strokeWidth: 1,
       fontSize: '80%',
       combine: {
         threshold: 0.0,
@@ -59,7 +60,7 @@ class PieChartCtrl extends MetricsPanelCtrl {
   }
 
   onInitEditMode() {
-    this.addEditorTab('Options', 'public/plugins/grafana-piechart-panel/editor.html', 2);
+    this.addEditorTab('Options', 'public/plugins/grafana-linechart-panel/editor.html', 2);
     this.unitFormats = kbn.getUnitFormats();
   }
 
@@ -84,14 +85,19 @@ class PieChartCtrl extends MetricsPanelCtrl {
   }
 
   parseSeries(series: any) {
-    return _.map(this.series, (serie, i) => {
-      return {
-        label: serie.alias,
-        data: serie.stats[this.panel.valueName],
-        color: this.panel.aliasColors[serie.alias] || this.$rootScope.colors[i],
-        legendData: serie.stats[this.panel.valueName],
-      };
-    });
+    const seriesData = [];
+    const ddd = series[0];
+    if (ddd) {
+      for (let i = 0; i < ddd.length; i++) {
+        seriesData.push({
+          label: ddd[i].label,
+          data: ddd[i].data,
+          color: this.panel.aliasColors[ddd[i].alias] || this.$rootScope.colors[i],
+          legendData: ddd[i].data,
+        });
+      }
+    }
+    return seriesData;
   }
 
   onDataReceived(dataList: any) {
@@ -101,12 +107,41 @@ class PieChartCtrl extends MetricsPanelCtrl {
   }
 
   seriesHandler(seriesData: any) {
-    const series = new TimeSeries({
-      datapoints: seriesData.datapoints,
-      alias: seriesData.target,
-    });
+    // const series = new TimeSeries({
+    //   datapoints: seriesData.datapoints,
+    //   alias: seriesData.target,
+    // });
 
-    series.flotpairs = series.getFlotPairs(this.panel.nullPointMode);
+    // series.flotpairs = series.getFlotPairs(this.panel.nullPointMode);
+    const series = [];
+    const yData: any[] = [];
+    let xData: any[] = [];
+    for (let i = 0; i < seriesData.columns.length; i++) {
+      if (seriesData.columns[i].text !== 'Time' && seriesData.columns[i].text !== this.panel.x_axis) {
+        yData.push(
+          _.map(seriesData.rows, row => {
+            return row[i];
+          })
+        );
+      } else {
+        yData.push([]);
+        if (seriesData.columns[i].text === this.panel.x_axis) {
+          xData = _.map(seriesData.rows, row => {
+            return row[i];
+          });
+        }
+      }
+    }
+    for (let i = 0; i < seriesData.columns.length; i++) {
+      if (seriesData.columns[i].text !== 'Time' && seriesData.columns[i].text !== this.panel.x_axis) {
+        series.push({
+          label: seriesData.columns[i].text,
+          data: _.map(yData[i], (y, d: number) => {
+            return [xData[d], y];
+          }),
+        });
+      }
+    }
     return series;
   }
 

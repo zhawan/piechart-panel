@@ -32,11 +32,11 @@ angular.module('grafana.directives').directive('piechartLegend', (popoverSrv: an
       });
 
       ctrl.events.on('render', () => {
-        data = ctrl.series;
+        data = ctrl.data;
         if (data) {
-          for (const i in data) {
-            data[i].color = ctrl.data[i].color;
-          }
+          // for (const i in data) {
+          //   data[i].color = ctrl.data[i].color;
+          // }
           render();
         }
       });
@@ -77,34 +77,34 @@ angular.module('grafana.directives').directive('piechartLegend', (popoverSrv: an
         ctrl.render();
       }
 
-      function getLegendHeaderHtml(statName: any) {
-        let name = statName;
+      // function getLegendHeaderHtml(statName: any) {
+      //   let name = statName;
 
-        if (panel.legend.header) {
-          name = panel.legend.header;
-        }
+      //   if (panel.legend.header) {
+      //     name = panel.legend.header;
+      //   }
 
-        let html = '<th class="pointer" data-stat="' + _.escape(statName) + '">' + name;
+      //   let html = '<th class="pointer" data-stat="' + _.escape(statName) + '">' + name;
 
-        if (panel.legend.sort === statName) {
-          const cssClass = panel.legend.sortDesc ? 'fa fa-caret-down' : 'fa fa-caret-up';
-          html += ' <span class="' + cssClass + '"></span>';
-        }
+      //   if (panel.legend.sort === statName) {
+      //     const cssClass = panel.legend.sortDesc ? 'fa fa-caret-down' : 'fa fa-caret-up';
+      //     html += ' <span class="' + cssClass + '"></span>';
+      //   }
 
-        return html + '</th>';
-      }
+      //   return html + '</th>';
+      // }
 
-      function getLegendPercentageHtml(statName: any) {
-        const name = 'percentage';
-        let html = '<th class="pointer" data-stat="' + statName + '">' + name;
+      // function getLegendPercentageHtml(statName: any) {
+      //   const name = 'percentage';
+      //   let html = '<th class="pointer" data-stat="' + statName + '">' + name;
 
-        if (panel.legend.sort === statName) {
-          const cssClass = panel.legend.sortDesc ? 'fa fa-caret-down' : 'fa fa-caret-up';
-          html += ' <span class="' + cssClass + '"></span>';
-        }
+      //   if (panel.legend.sort === statName) {
+      //     const cssClass = panel.legend.sortDesc ? 'fa fa-caret-down' : 'fa fa-caret-up';
+      //     html += ' <span class="' + cssClass + '"></span>';
+      //   }
 
-        return html + '</th>';
-      }
+      //   return html + '</th>';
+      // }
 
       function openColorSelector(e: any) {
         // if we clicked inside poup container ignore click
@@ -164,30 +164,30 @@ angular.module('grafana.directives').directive('piechartLegend', (popoverSrv: an
         elem.css('min-width', width);
         elem.css('width', ieWidth);
 
-        const showValues = panel.legend.values || panel.legend.percentage;
-        const tableLayout = (panel.legendType === 'Under graph' || panel.legendType === 'Right side') && showValues;
+        // const showValues = panel.legend.values || panel.legend.percentage;
+        // const tableLayout = (panel.legendType === 'Under graph' || panel.legendType === 'Right side') && showValues;
 
-        $container.toggleClass('piechart-legend-table', tableLayout);
+        // $container.toggleClass('piechart-legend-table', tableLayout);
 
-        let legendHeader;
-        if (tableLayout) {
-          let header = '<tr><th colspan="2" style="text-align:left"></th>';
-          if (panel.legend.values) {
-            header += getLegendHeaderHtml(ctrl.panel.valueName);
-          }
-          if (panel.legend.percentage) {
-            header += getLegendPercentageHtml(ctrl.panel.valueName);
-          }
-          header += '</tr>';
-          legendHeader = $(header);
-        }
+        // let legendHeader;
+        // if (tableLayout) {
+        //   let header = '<tr><th colspan="2" style="text-align:left"></th>';
+        //   if (panel.legend.values) {
+        //     header += getLegendHeaderHtml(ctrl.panel.valueName);
+        //   }
+        //   if (panel.legend.percentage) {
+        //     header += getLegendPercentageHtml(ctrl.panel.valueName);
+        //   }
+        //   header += '</tr>';
+        //   legendHeader = $(header);
+        // }
 
-        let total = 0;
-        if (panel.legend.percentage) {
-          for (i = 0; i < seriesList.length; i++) {
-            total += seriesList[i].stats[ctrl.panel.valueName];
-          }
-        }
+        // let total = 0;
+        // if (panel.legend.percentage) {
+        //   for (i = 0; i < seriesList.length; i++) {
+        //     total += seriesList[i].stats[ctrl.panel.valueName];
+        //   }
+        // }
 
         //let seriesShown = 0;
         const seriesElements = [];
@@ -201,14 +201,14 @@ angular.module('grafana.directives').directive('piechartLegend', (popoverSrv: an
             continue;
           }
           // ignore series excluded via override
-          if (!series.legend) {
-            continue;
-          }
+          // if (!series.legend) {
+          //   continue;
+          // }
 
-          let decimal = 0;
-          if (ctrl.panel.legend.percentageDecimals) {
-            decimal = ctrl.panel.legend.percentageDecimals;
-          }
+          // let decimal = 0;
+          // if (ctrl.panel.legend.percentageDecimals) {
+          //   decimal = ctrl.panel.legend.percentageDecimals;
+          // }
 
           let html = '<div class="piechart-legend-series';
           if (ctrl.hiddenSeries[seriesData.label]) {
@@ -221,34 +221,34 @@ angular.module('grafana.directives').directive('piechartLegend', (popoverSrv: an
 
           html += '<a class="piechart-legend-alias" style="float:none;">' + _.escape(seriesData.label) + '</a>';
 
-          if (showValues && tableLayout) {
-            const value = seriesData.legendData;
-            if (panel.legend.values) {
-              html += '<div class="piechart-legend-value">' + ctrl.formatValue(value) + '</div>';
-            }
-            if (total) {
-              const pvalue = ((value / total) * 100).toFixed(decimal) + '%';
-              html += '<div class="piechart-legend-value">' + pvalue + '</div>';
-            }
-          }
+          // if (showValues && tableLayout) {
+          //   const value = seriesData.legendData;
+          //   if (panel.legend.values) {
+          //     html += '<div class="piechart-legend-value">' + ctrl.formatValue(value) + '</div>';
+          //   }
+          // if (total) {
+          //   const pvalue = ((value / total) * 100).toFixed(decimal) + '%';
+          //   html += '<div class="piechart-legend-value">' + pvalue + '</div>';
+          // }
+          // }
 
           html += '</div>';
 
           seriesElements.push($(html));
           //seriesShown++;
         }
-        if (tableLayout) {
-          // const topPadding = 6;
-          const tbodyElem = $('<tbody></tbody>');
-          // tbodyElem.css("max-height", maxHeight - topPadding);
-          if (typeof legendHeader !== 'undefined') {
-            tbodyElem.append(legendHeader);
-          }
-          tbodyElem.append(seriesElements);
-          $container.append(tbodyElem);
-        } else {
-          $container.append(seriesElements);
-        }
+        // if (tableLayout) {
+        //   // const topPadding = 6;
+        //   const tbodyElem = $('<tbody></tbody>');
+        //   // tbodyElem.css("max-height", maxHeight - topPadding);
+        //   if (typeof legendHeader !== 'undefined') {
+        //     tbodyElem.append(legendHeader);
+        //   }
+        //   tbodyElem.append(seriesElements);
+        //   $container.append(tbodyElem);
+        // } else {
+        $container.append(seriesElements);
+        // }
 
         if (panel.legendType === 'Under graph') {
           addScrollbar();

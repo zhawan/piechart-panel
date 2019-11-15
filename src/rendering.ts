@@ -34,24 +34,24 @@ export default function link(scope: any, elem: any, attrs: any, ctrl: any) {
     return 0;
   }
 
-  function formatter(label: any, slice: any) {
-    const sliceData = slice.data[0][slice.data[0].length - 1];
-    let decimal = 2;
-    const start = `<div style="font-size:${ctrl.panel.fontSize};text-align:center;padding:2px;">${label}<br/>`;
+  // function formatter(label: any, slice: any) {
+  //   const sliceData = slice.data[0][slice.data[0].length - 1];
+  //   let decimal = 2;
+  //   const start = `<div style="font-size:${ctrl.panel.fontSize};text-align:center;padding:2px;">${label}<br/>`;
 
-    if (ctrl.panel.legend.percentageDecimals) {
-      decimal = ctrl.panel.legend.percentageDecimals;
-    }
-    if (ctrl.panel.legend.values && ctrl.panel.legend.percentage) {
-      return start + ctrl.formatValue(sliceData) + '<br/>' + slice.percent.toFixed(decimal) + '%</div>';
-    } else if (ctrl.panel.legend.values) {
-      return start + ctrl.formatValue(sliceData) + '</div>';
-    } else if (ctrl.panel.legend.percentage) {
-      return start + slice.percent.toFixed(decimal) + '%</div>';
-    } else {
-      return start + '</div>';
-    }
-  }
+  //   if (ctrl.panel.legend.percentageDecimals) {
+  //     decimal = ctrl.panel.legend.percentageDecimals;
+  //   }
+  //   if (ctrl.panel.legend.values && ctrl.panel.legend.percentage) {
+  //     return start + ctrl.formatValue(sliceData) + '<br/>' + slice.percent.toFixed(decimal) + '%</div>';
+  //   } else if (ctrl.panel.legend.values) {
+  //     return start + ctrl.formatValue(sliceData) + '</div>';
+  //   } else if (ctrl.panel.legend.percentage) {
+  //     return start + slice.percent.toFixed(decimal) + '%</div>';
+  //   } else {
+  //     return start + '</div>';
+  //   }
+  // }
 
   function noDataPoints() {
     const html = '<div class="datapoints-warning"><span class="small">No data points</span></div>';
@@ -74,43 +74,67 @@ export default function link(scope: any, elem: any, attrs: any, ctrl: any) {
 
     plotCanvas.css(plotCss);
 
-    const backgroundColor = $('body').css('background-color');
+    // const backgroundColor = $('body').css('background-color');
 
     const options = {
-      legend: {
-        show: false,
-      },
       series: {
-        pie: {
-          radius: 1,
-          innerRadius: 0,
+        // 只针对线的属性
+        lines: {
+          // 指定两个点之间是用水平线还是垂直线连接
+          steps: 0,
           show: true,
-          stroke: {
-            color: backgroundColor,
-            width: parseFloat(ctrl.panel.strokeWidth).toFixed(1),
-          },
-          label: {
-            show: ctrl.panel.legend.show && ctrl.panel.legendType === 'On graph',
-            formatter: formatter,
-          },
-          highlight: {
-            opacity: 0.0,
-          },
-          combine: {
-            threshold: ctrl.panel.combine.threshold,
-            label: ctrl.panel.combine.label,
-          },
+          // 线宽度
+          lineWidth: 1,
+          // 是否填充
+          fill: true,
+          // 填充色，如rgba(255, 255, 255, 0.8)
+          fillColor: null,
         },
+        // 设置阴影的大小，0消除阴影
+        shadowSize: 0,
+        // 鼠标悬停时的颜色
+        highlightColor: 1,
+        //  {
+        //   pie: {
+        //     radius: 1,
+        //     innerRadius: 0,
+        //     show: true,
+        //     stroke: {
+        //       color: backgroundColor,
+        //       width: parseFloat(ctrl.panel.strokeWidth).toFixed(1),
+        //     },
+        //     label: {
+        //       show: ctrl.panel.legend.show && ctrl.panel.legendType === 'On graph',
+        //       formatter: formatter,
+        //     },
+        //     highlight: {
+        //       opacity: 0.0,
+        //     },
+        //     combine: {
+        //       threshold: ctrl.panel.combine.threshold,
+        //       label: ctrl.panel.combine.label,
+        //     },
+        //   },
+        // },
       },
       grid: {
         hoverable: true,
         clickable: false,
       },
+      legend: {
+        show: false,
+        backgroundOpacity: 0.5,
+        noColumns: 0,
+        backgroundColor: 'green',
+        position: 'ne',
+      },
+      xaxes: [{ position: 'bottom' }],
+      yaxes: [{ position: 'left' }],
     };
 
-    if (panel.pieType === 'donut') {
-      options.series.pie.innerRadius = 0.5;
-    }
+    // if (panel.pieType === 'donut') {
+    //   options.series.pie.innerRadius = 0.5;
+    // }
 
     data = ctrl.data;
 
