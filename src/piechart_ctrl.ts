@@ -5,6 +5,7 @@ import kbn from 'grafana/app/core/utils/kbn';
 import TimeSeries from 'grafana/app/core/time_series';
 import rendering from './rendering';
 import './legend';
+import * as d3 from 'd3';
 
 class PieChartCtrl extends MetricsPanelCtrl {
   static templateUrl = 'module.html';
@@ -23,6 +24,7 @@ class PieChartCtrl extends MetricsPanelCtrl {
     const panelDefaults = {
       x_axis: 'ep',
       // pieType: 'pie',
+      ignoreColums: '',
       legend: {
         show: true, // disable/enable legend
         values: true,
@@ -133,12 +135,35 @@ class PieChartCtrl extends MetricsPanelCtrl {
       }
     }
     for (let i = 0; i < seriesData.columns.length; i++) {
-      if (seriesData.columns[i].text !== 'Time' && seriesData.columns[i].text !== this.panel.x_axis) {
+      if (
+        seriesData.columns[i].text !== 'Time' &&
+        seriesData.columns[i].text !== this.panel.x_axis &&
+        this.panel.ignoreColums.split(',').indexOf(seriesData.columns[i].text) < 0
+      ) {
+        const dataSeries = _.map(yData[i], (y, d: number) => {
+          return { x: xData[d], y: y };
+        });
+        const groupedSeries = d3
+          .nest()
+          .key((d: any) => {
+            return d.x;
+          })
+          .entries(dataSeries);
+        const groupedData: any[] = [];
+        for (let j = 0; j < groupedSeries.length; j++) {
+          groupedData.push([
+            Number(groupedSeries[j].key),
+            d3.sum(
+              _.map(groupedSeries[j].values, (d: any) => {
+                return d.y;
+              })
+            ),
+          ]);
+        }
+
         series.push({
           label: seriesData.columns[i].text,
-          data: _.map(yData[i], (y, d: number) => {
-            return [xData[d], y];
-          }),
+          data: groupedData,
         });
       }
     }

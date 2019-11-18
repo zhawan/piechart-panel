@@ -173,12 +173,13 @@ export default function link(scope: any, elem: any, attrs: any, ctrl: any) {
       }
 
       let body;
-      const percent = parseFloat(item.series.percent).toFixed(2);
+      // const percent = parseFloat(item.series.percent).toFixed(2);
       const formatted = ctrl.formatValue(item.series.data[0][1]);
 
       body = '<div class="piechart-tooltip-small"><div class="piechart-tooltip-time">';
       body += '<div class="piechart-tooltip-value">' + _.escape(item.series.label) + ': ' + formatted;
-      body += ' (' + percent + '%)' + '</div>';
+      // body += ' (' + percent + '%)' ;
+      body += '</div>';
       body += '</div></div>';
 
       $tooltip.html(body).place_tt(pos.pageX + 20, pos.pageY);

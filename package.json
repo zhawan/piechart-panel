@@ -16,6 +16,7 @@
   "license": "MIT",
   "private": true,
   "dependencies": {
+    "@types/d3": "^5.7.2",
     "angular": "^1.7.8",
     "flot": "^3.2.9",
     "jquery": "^3.4.1",

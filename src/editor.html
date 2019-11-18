@@ -7,6 +7,12 @@
         <select class="gf-form-input" ng-model="ctrl.panel.x_axis" ng-options="t for t in ['ep']" ng-change="ctrl.render()"></select>
       </div>
     </div>
+    <div class="gf-form">
+      <span class="gf-form-label width-8">ignore columns</span>
+      <div class="gf-form-select-wrapper max-width-10">
+        <select class="gf-form-input" ng-model="ctrl.panel.ignoreColumns" ng-options="t for t in ['experiment','ep']" ng-change="ctrl.render()"></select>
+      </div>
+    </div>
     <!-- <div class="gf-form">
       <span class="gf-form-label width-8">Type</span>
       <div class="gf-form-select-wrapper max-width-10">
