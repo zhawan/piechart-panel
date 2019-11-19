@@ -23,6 +23,7 @@ class PieChartCtrl extends MetricsPanelCtrl {
 
     const panelDefaults = {
       x_axis: 'ep',
+      xColumns: [],
       // pieType: 'pie',
       ignoreColumn: '',
       ignoreColumns: [],
@@ -89,15 +90,18 @@ class PieChartCtrl extends MetricsPanelCtrl {
 
   parseSeries(series: any) {
     const seriesData = [];
-    const ddd = series[0];
-    if (ddd) {
-      for (let i = 0; i < ddd.length; i++) {
-        seriesData.push({
-          label: ddd[i].label,
-          data: ddd[i].data,
-          color: this.panel.aliasColors[ddd[i].alias] || this.$rootScope.colors[i],
-          legendData: ddd[i].data,
-        });
+    if (this.panel.xColumns.length > 0 && this.panel.xColumns.indexOf(this.panel.x_axis) >= 0) {
+      const xProcessed = series.map(this.seriesHandler.bind(this));
+      const ddd = xProcessed[0];
+      if (ddd) {
+        for (let i = 0; i < ddd.length; i++) {
+          seriesData.push({
+            label: ddd[i].label,
+            data: ddd[i].data,
+            color: this.panel.aliasColors[ddd[i].alias] || this.$rootScope.colors[i],
+            legendData: ddd[i].data,
+          });
+        }
       }
     }
     return seriesData;
@@ -108,9 +112,10 @@ class PieChartCtrl extends MetricsPanelCtrl {
     for (let i = 0; i < dataList[0].columns.length; i++) {
       ignoreOptions.push(dataList[0].columns[i].text);
     }
-    this.panel.ignoreColumns = ignoreOptions;
+    this.panel.xColumns = ignoreOptions.slice();
+    this.panel.ignoreColumns = ignoreOptions.slice();
 
-    this.series = dataList.map(this.seriesHandler.bind(this));
+    this.series = dataList;
     this.data = this.parseSeries(this.series);
     this.render(this.data);
   }
