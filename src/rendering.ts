@@ -136,14 +136,14 @@ export default function link(scope: any, elem: any, attrs: any, ctrl: any) {
     //   options.series.pie.innerRadius = 0.5;
     // }
 
-    data = ctrl.data;
+    data = [];
 
-    for (let i = 0; i < data.length; i++) {
-      const series = data[i];
+    for (let i = 0; i < ctrl.data.length; i++) {
+      const series = ctrl.data[i];
 
       // if hidden remove points
-      if (ctrl.hiddenSeries[series.label]) {
-        series.data = {};
+      if (!(ctrl.hiddenSeries[series.label] || ctrl.panel.ignoreColumn.indexOf(series.label) >= 0)) {
+        data.push(series);
       }
     }
 

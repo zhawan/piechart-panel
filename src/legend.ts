@@ -197,7 +197,7 @@ angular.module('grafana.directives').directive('piechartLegend', (popoverSrv: an
           const seriesData = dataList[i];
 
           // ignore empty series
-          if (panel.legend.hideEmpty && series.allIsNull) {
+          if ((panel.legend.hideEmpty && series.allIsNull) || ctrl.panel.ignoreColumn.indexOf(seriesData.label) >= 0) {
             continue;
           }
           // ignore series excluded via override

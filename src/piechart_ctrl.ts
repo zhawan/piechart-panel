@@ -24,7 +24,8 @@ class PieChartCtrl extends MetricsPanelCtrl {
     const panelDefaults = {
       x_axis: 'ep',
       // pieType: 'pie',
-      ignoreColums: '',
+      ignoreColumn: '',
+      ignoreColumns: [],
       legend: {
         show: true, // disable/enable legend
         values: true,
@@ -103,6 +104,12 @@ class PieChartCtrl extends MetricsPanelCtrl {
   }
 
   onDataReceived(dataList: any) {
+    const ignoreOptions: string[] = [];
+    for (let i = 0; i < dataList[0].columns.length; i++) {
+      ignoreOptions.push(dataList[0].columns[i].text);
+    }
+    this.panel.ignoreColumns = ignoreOptions;
+
     this.series = dataList.map(this.seriesHandler.bind(this));
     this.data = this.parseSeries(this.series);
     this.render(this.data);
@@ -135,11 +142,7 @@ class PieChartCtrl extends MetricsPanelCtrl {
       }
     }
     for (let i = 0; i < seriesData.columns.length; i++) {
-      if (
-        seriesData.columns[i].text !== 'Time' &&
-        seriesData.columns[i].text !== this.panel.x_axis &&
-        this.panel.ignoreColums.split(',').indexOf(seriesData.columns[i].text) < 0
-      ) {
+      if (seriesData.columns[i].text !== 'Time' && seriesData.columns[i].text !== this.panel.x_axis) {
         const dataSeries = _.map(yData[i], (y, d: number) => {
           return { x: xData[d], y: y };
         });
