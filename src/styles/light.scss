@@ -1,44 +1,44 @@
 @import '../../node_modules/@grafana/toolkit/sass/_variables.light.scss';
-@import 'linechart';
+@import 'heatmapchart';
 
-.lineLabel > div {
+.heatmapLabel > div {
   color: $black;
 }
 
-.linechart-panel {
+.heatmapchart-panel {
   display: flex;
   flex-direction: column;
   height: 100%;
 }
 
-.linechart-panel--legend-right {
+.heatmapchart-panel--legend-right {
   flex-direction: row;
 }
 
-.linechart-panel--legend-right .linechart-legend {
+.heatmapchart-panel--legend-right .heatmapchart-legend {
   flex: 0 1 10px;
   height: 100%;
 }
 
 _:-ms-fullscreen,
-:root .linechart-panel--legend-right .linechart-legend {
+:root .heatmapchart-panel--legend-right .heatmapchart-legend {
   flex: 0 1 200px;
 }
 
-.linechart-panel--legend-right .linechart-legend-series {
+.heatmapchart-panel--legend-right .heatmapchart-legend-series {
   display: block;
   padding-left: 0px;
 }
 
-.linechart-panel--legend-right .linechart-legend-table .linechart-legend-series {
+.heatmapchart-panel--legend-right .heatmapchart-legend-table .heatmapchart-legend-series {
   display: table-row;
 }
 
-.linechart-legend__container {
+.heatmapchart-legend__container {
   height: 100%;
 }
 
-.linechart-panel__chart {
+.heatmapchart-panel__chart {
   position: relative;
   cursor: crosshair;
   flex-grow: 1;
@@ -59,7 +59,7 @@ _:-ms-fullscreen,
   padding: 10px;
 }
 
-.linechart-legend {
+.heatmapchart-legend {
   flex: 0 1 auto;
   margin: 0 1rem;
   text-align: center;
@@ -67,19 +67,19 @@ _:-ms-fullscreen,
   position: relative;
 }
 
-.linechart-legend .popover-content {
+.heatmapchart-legend .popover-content {
   padding: 0;
 }
 
-.linechart-legend-icon {
+.heatmapchart-legend-icon {
   position: relative;
   padding-right: 4px;
   top: 1px;
 }
 
-.linechart-legend-icon,
-.linechart-legend-alias,
-.linechart-legend-value {
+.heatmapchart-legend-icon,
+.heatmapchart-legend-alias,
+.heatmapchart-legend-value {
   cursor: pointer;
   float: left;
   white-space: nowrap;
@@ -88,87 +88,87 @@ _:-ms-fullscreen,
   color: 52545c;
 }
 
-.linechart-legend-icon.current::before {
+.heatmapchart-legend-icon.current::before {
   content: 'Current: ';
 }
 
-.linechart-legend-icon.max::before {
+.heatmapchart-legend-icon.max::before {
   content: 'Max: ';
 }
 
-.linechart-legend-icon.min::before {
+.heatmapchart-legend-icon.min::before {
   content: 'Min: ';
 }
 
-.linechart-legend-icon.total::before {
+.heatmapchart-legend-icon.total::before {
   content: 'Total: ';
 }
 
-.linechart-legend-icon.avg::before {
+.heatmapchart-legend-icon.avg::before {
   content: 'Avg: ';
 }
 
-.linechart-legend-alias.current::before {
+.heatmapchart-legend-alias.current::before {
   content: 'Current: ';
 }
 
-.linechart-legend-alias.max::before {
+.heatmapchart-legend-alias.max::before {
   content: 'Max: ';
 }
 
-.linechart-legend-alias.min::before {
+.heatmapchart-legend-alias.min::before {
   content: 'Min: ';
 }
 
-.linechart-legend-alias.total::before {
+.heatmapchart-legend-alias.total::before {
   content: 'Total: ';
 }
 
-.linechart-legend-alias.avg::before {
+.heatmapchart-legend-alias.avg::before {
   content: 'Avg: ';
 }
 
-.linechart-legend-value.current::before {
+.heatmapchart-legend-value.current::before {
   content: 'Current: ';
 }
 
-.linechart-legend-value.max::before {
+.heatmapchart-legend-value.max::before {
   content: 'Max: ';
 }
 
-.linechart-legend-value.min::before {
+.heatmapchart-legend-value.min::before {
   content: 'Min: ';
 }
 
-.linechart-legend-value.total::before {
+.heatmapchart-legend-value.total::before {
   content: 'Total: ';
 }
 
-.linechart-legend-value.avg::before {
+.heatmapchart-legend-value.avg::before {
   content: 'Avg: ';
 }
 
-.linechart-legend-icon .fa {
+.heatmapchart-legend-icon .fa {
   font-size: 135%;
   position: relative;
   top: 1px;
 }
 
-.linechart-legend-series {
+.heatmapchart-legend-series {
   float: left;
   white-space: nowrap;
   padding-left: 10px;
 }
 
-.linechart-legend-series--right-y {
+.heatmapchart-legend-series--right-y {
   float: right;
 }
 
-.linechart-legend-value {
+.heatmapchart-legend-value {
   padding-left: 6px;
 }
 
-.linechart-legend-table tbody {
+.heatmapchart-legend-table tbody {
   display: block;
   overflow-y: auto;
   overflow-x: hidden;
@@ -177,26 +177,26 @@ _:-ms-fullscreen,
   padding-right: 5px;
 }
 
-.linechart-legend-table .linechart-legend-series {
+.heatmapchart-legend-table .heatmapchart-legend-series {
   display: table-row;
   float: none;
   padding-left: 0;
 }
 
-.linechart-legend-table .linechart-legend-series--right-y {
+.heatmapchart-legend-table .heatmapchart-legend-series--right-y {
   float: none;
 }
 
-.linechart-legend-table .linechart-legend-series--right-y .linechart-legend-alias::after {
+.heatmapchart-legend-table .heatmapchart-legend-series--right-y .heatmapchart-legend-alias::after {
   content: '(right-y)';
   padding: 0 5px;
   color: #767980;
 }
 
-.linechart-legend-table td,
-.linechart-legend-alias,
-.linechart-legend-icon,
-.linechart-legend-value {
+.heatmapchart-legend-table td,
+.heatmapchart-legend-alias,
+.heatmapchart-legend-icon,
+.heatmapchart-legend-value {
   float: none;
   display: table-cell;
   white-space: nowrap;
@@ -204,21 +204,21 @@ _:-ms-fullscreen,
   text-align: right;
 }
 
-.linechart-legend-table .linechart-legend-icon {
+.heatmapchart-legend-table .heatmapchart-legend-icon {
   width: 5px;
   padding: 0;
   top: 0;
 }
 
-.linechart-legend-table .linechart-legend-icon .fa {
+.heatmapchart-legend-table .heatmapchart-legend-icon .fa {
   top: 4px;
 }
 
-.linechart-legend-table .linechart-legend-value {
+.heatmapchart-legend-table .heatmapchart-legend-value {
   padding-left: 15px;
 }
 
-.linechart-legend-table .linechart-legend-alias {
+.heatmapchart-legend-table .heatmapchart-legend-alias {
   padding-left: 7px;
   text-align: left;
   width: 95%;
@@ -227,31 +227,31 @@ _:-ms-fullscreen,
   overflow: hidden;
 }
 
-.linechart-legend-table .linechart-legend-series:nth-child(odd) {
+.heatmapchart-legend-table .heatmapchart-legend-series:nth-child(odd) {
   background: #dde4ed;
 }
 
-.linechart-legend-table .linechart-legend-value.current::before {
+.heatmapchart-legend-table .heatmapchart-legend-value.current::before {
   content: '';
 }
 
-.linechart-legend-table .linechart-legend-value.max::before {
+.heatmapchart-legend-table .heatmapchart-legend-value.max::before {
   content: '';
 }
 
-.linechart-legend-table .linechart-legend-value.min::before {
+.heatmapchart-legend-table .heatmapchart-legend-value.min::before {
   content: '';
 }
 
-.linechart-legend-table .linechart-legend-value.total::before {
+.heatmapchart-legend-table .heatmapchart-legend-value.total::before {
   content: '';
 }
 
-.linechart-legend-table .linechart-legend-value.avg::before {
+.heatmapchart-legend-table .heatmapchart-legend-value.avg::before {
   content: '';
 }
 
-.linechart-legend-table th {
+.heatmapchart-legend-table th {
   text-align: right;
   padding: 0px 10px 1px 0;
   font-weight: bold;
@@ -260,19 +260,19 @@ _:-ms-fullscreen,
   white-space: nowrap;
 }
 
-.linechart-legend-series-hidden .linechart-legend-value,
-.linechart-legend-series-hidden .linechart-legend-alias {
+.heatmapchart-legend-series-hidden .heatmapchart-legend-value,
+.heatmapchart-legend-series-hidden .heatmapchart-legend-alias {
   color: #acb6bf;
 }
 
-.linechart-tooltip {
+.heatmapchart-tooltip {
   white-space: nowrap;
   font-size: 12px;
   background-color: #dde4ed;
   color: #35373f;
 }
 
-.linechart-tooltip .linechart-tooltip-time {
+.heatmapchart-tooltip .heatmapchart-tooltip-time {
   text-align: center;
   position: relative;
   top: -3px;
@@ -281,7 +281,7 @@ _:-ms-fullscreen,
   color: #35373f;
 }
 
-.linechart-tooltip .linechart-tooltip-value {
+.heatmapchart-tooltip .heatmapchart-tooltip-value {
   display: table-cell;
   font-weight: bold;
   padding-left: 15px;

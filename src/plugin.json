@@ -1,15 +1,15 @@
 {
   "type": "panel",
-  "name": "Line Chart",
-  "id": "grafana-linechart-panel",
+  "name": "heatmap Chart",
+  "id": "grafana-heatmapchart-panel",
 
   "info": {
-    "description": "Line chart panel for grafana",
+    "description": "heatmap chart panel for grafana",
     "author": {
       "name": "Grafana Labs",
       "url": "http://grafana.com"
     },
-    "keywords": ["linechart", "panel"],
+    "keywords": ["heatmapchart", "panel"],
     "logos": {
       "small": "img/piechart_logo_small.png",
       "large": "img/piechart_logo_large.png"

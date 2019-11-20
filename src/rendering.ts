@@ -2,12 +2,13 @@ import _ from 'lodash';
 import './lib/jquery.flot.pie';
 import $ from 'jquery';
 //import './lib/jquery.flot';
+import * as d3 from 'd3';
 
 export default function link(scope: any, elem: any, attrs: any, ctrl: any) {
   let data;
   const panel = ctrl.panel;
-  elem = elem.find('.linechart-panel__chart');
-  const $tooltip = $('<div id="tooltip">') as any;
+  elem = elem.find('.heatmapchart-panel__chart');
+  // const $tooltip = $('<div id="tooltip">') as any;
 
   ctrl.events.on('render', () => {
     if (panel.legendType === 'Right side') {
@@ -21,15 +22,15 @@ export default function link(scope: any, elem: any, attrs: any, ctrl: any) {
   });
 
   function getLegendHeight(panelHeight: any) {
-    if (!ctrl.panel.legend.show || ctrl.panel.legendType === 'Right side' || ctrl.panel.legendType === 'On graph') {
-      return 20;
-    }
+    // if (!ctrl.panel.legend.show || ctrl.panel.legendType === 'Right side' || ctrl.panel.legendType === 'On graph') {
+    //   return 20;
+    // }
 
-    if ((ctrl.panel.legendType === 'Under graph' && ctrl.panel.legend.percentage) || ctrl.panel.legend.values) {
-      const breakPoint = parseInt(ctrl.panel.breakPoint, 10) / 100;
-      const total = 23 + 20 * data.length;
-      return Math.min(total, Math.floor(panelHeight * breakPoint));
-    }
+    // if ((ctrl.panel.legendType === 'Under graph' && ctrl.panel.legend.percentage) || ctrl.panel.legend.values) {
+    //   const breakPoint = parseInt(ctrl.panel.breakPoint, 10) / 100;
+    //   const total = 23 + 20 * data.length;
+    //   return Math.min(total, Math.floor(panelHeight * breakPoint));
+    // }
 
     return 0;
   }
@@ -76,114 +77,189 @@ export default function link(scope: any, elem: any, attrs: any, ctrl: any) {
 
     // const backgroundColor = $('body').css('background-color');
 
-    const options = {
-      series: {
-        // 只针对线的属性
-        lines: {
-          // 指定两个点之间是用水平线还是垂直线连接
-          steps: 0,
-          show: true,
-          // 线宽度
-          lineWidth: 1,
-          // 是否填充
-          fill: true,
-          // 填充色，如rgba(255, 255, 255, 0.8)
-          fillColor: null,
-        },
-        // 设置阴影的大小，0消除阴影
-        shadowSize: 0,
-        // 鼠标悬停时的颜色
-        highlightColor: 1,
-        //  {
-        //   pie: {
-        //     radius: 1,
-        //     innerRadius: 0,
-        //     show: true,
-        //     stroke: {
-        //       color: backgroundColor,
-        //       width: parseFloat(ctrl.panel.strokeWidth).toFixed(1),
-        //     },
-        //     label: {
-        //       show: ctrl.panel.legend.show && ctrl.panel.legendType === 'On graph',
-        //       formatter: formatter,
-        //     },
-        //     highlight: {
-        //       opacity: 0.0,
-        //     },
-        //     combine: {
-        //       threshold: ctrl.panel.combine.threshold,
-        //       label: ctrl.panel.combine.label,
-        //     },
-        //   },
-        // },
-      },
-      grid: {
-        hoverable: true,
-        clickable: false,
-      },
-      legend: {
-        show: false,
-        backgroundOpacity: 0.5,
-        noColumns: 0,
-        backgroundColor: 'green',
-        position: 'ne',
-      },
-      xaxes: [{ position: 'bottom' }],
-      yaxes: [{ position: 'left' }],
-    };
+    // const options = {
+    //   series: {
+    //     // 只针对线的属性
+    //     lines: {
+    //       // 指定两个点之间是用水平线还是垂直线连接
+    //       steps: 0,
+    //       show: true,
+    //       // 线宽度
+    //       lineWidth: 1,
+    //       // 是否填充
+    //       fill: true,
+    //       // 填充色，如rgba(255, 255, 255, 0.8)
+    //       fillColor: null,
+    //     },
+    //     // 设置阴影的大小，0消除阴影
+    //     shadowSize: 0,
+    //     // 鼠标悬停时的颜色
+    //     highlightColor: 1,
+    //     //  {
+    //     //   pie: {
+    //     //     radius: 1,
+    //     //     innerRadius: 0,
+    //     //     show: true,
+    //     //     stroke: {
+    //     //       color: backgroundColor,
+    //     //       width: parseFloat(ctrl.panel.strokeWidth).toFixed(1),
+    //     //     },
+    //     //     label: {
+    //     //       show: ctrl.panel.legend.show && ctrl.panel.legendType === 'On graph',
+    //     //       formatter: formatter,
+    //     //     },
+    //     //     highlight: {
+    //     //       opacity: 0.0,
+    //     //     },
+    //     //     combine: {
+    //     //       threshold: ctrl.panel.combine.threshold,
+    //     //       label: ctrl.panel.combine.label,
+    //     //     },
+    //     //   },
+    //     // },
+    //   },
+    //   grid: {
+    //     hoverable: true,
+    //     clickable: false,
+    //   },
+    //   legend: {
+    //     show: false,
+    //     backgroundOpacity: 0.5,
+    //     noColumns: 0,
+    //     backgroundColor: 'green',
+    //     position: 'ne',
+    //   },
+    //   xaxes: [{ position: 'bottom' }],
+    //   yaxes: [{ position: 'left' }],
+    // };
 
     // if (panel.pieType === 'donut') {
     //   options.series.pie.innerRadius = 0.5;
     // }
 
-    data = [];
+    data = ctrl.data;
 
-    for (let i = 0; i < ctrl.data.length; i++) {
-      const series = ctrl.data[i];
+    // for (let i = 0; i < ctrl.data.length; i++) {
+    //   const series = ctrl.data[i];
 
-      // if hidden remove points
-      if (!(ctrl.hiddenSeries[series.label] || ctrl.panel.ignoreColumn.indexOf(series.label) >= 0)) {
-        data.push(series);
-      }
-    }
+    //   // if hidden remove points
+    //   if (!(ctrl.hiddenSeries[series.label] || ctrl.panel.ignoreColumn.indexOf(series.label) >= 0)) {
+    //     data.push(series);
+    //   }
+    // }
 
-    if (panel.legend.sort) {
-      if (ctrl.panel.valueName !== panel.legend.sort) {
-        panel.legend.sort = ctrl.panel.valueName;
-      }
-      if (panel.legend.sortDesc === true) {
-        data.sort((a: any, b: any) => {
-          return b.legendData - a.legendData;
-        });
-      } else {
-        data.sort((a: any, b: any) => {
-          return a.legendData - b.legendData;
-        });
-      }
-    }
+    // if (panel.legend.sort) {
+    //   if (ctrl.panel.valueName !== panel.legend.sort) {
+    //     panel.legend.sort = ctrl.panel.valueName;
+    //   }
+    //   if (panel.legend.sortDesc === true) {
+    //     data.sort((a: any, b: any) => {
+    //       return b.legendData - a.legendData;
+    //     });
+    //   } else {
+    //     data.sort((a: any, b: any) => {
+    //       return a.legendData - b.legendData;
+    //     });
+    //   }
+    // }
 
     elem.html(plotCanvas);
 
-    // @ts-ignore
-    $.plot(plotCanvas, data, options);
-    plotCanvas.bind('plothover', (event: any, pos: any, item: any) => {
-      if (!item) {
-        $tooltip.detach();
-        return;
+    const margin = { top: 10, right: 60, bottom: 20, left: 60 },
+      chartWidth = width - margin.left - margin.right,
+      chartHeight = height - margin.top - margin.bottom;
+    const chartRoot = d3.select(plotCanvas.get(0));
+    const gRoot = chartRoot
+      .selectAll('*')
+      .remove()
+      .append('svg')
+      .attr('viewBox', '0,0,' + width + ',' + height)
+      .append('g')
+      .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
+
+    const xArray = d3
+      .nest()
+      .key((d: any) => {
+        return d.x;
+      })
+      .entries(data)
+      .map((d: any) => {
+        return d.key;
+      })
+      .sort();
+    const yArray = d3
+      .nest()
+      .key((d: any) => {
+        return d.y;
+      })
+      .entries(data)
+      .map((d: any) => {
+        return d.key;
+      })
+      .sort();
+    // const zColor = d3.schemeReds[10];
+    let zMin = 0;
+    let zMax = 0;
+    for (let i = 0; i < data.length; i++) {
+      if (data[i].z > zMax) {
+        zMax = data[i].z;
       }
+      if (data[i].z < zMin) {
+        zMin = data[i].z;
+      }
+    }
+    const z = d3
+      .scaleLinear()
+      .domain([0, 255])
+      .range([zMin, zMax]);
 
-      let body;
-      // const percent = parseFloat(item.series.percent).toFixed(2);
-      const formatted = ctrl.formatValue(item.series.data[0][1]);
+    const drawSeries = [];
+    for (let i = 0; i < data.length; i++) {
+      drawSeries.push({
+        x: xArray.indexOf(data[i].x),
+        y: yArray.indexOf(data[i].y),
+        z: d3.rgb(Math.ceil(z(data[i].z)), 255, 255),
+      });
+    }
+    const rectWidth = chartWidth / xArray.length;
+    const rectHeight = chartHeight / yArray.length;
 
-      body = '<div class="linechart-tooltip-small"><div class="linechart-tooltip-time">';
-      body += '<div class="linechart-tooltip-value">' + _.escape(item.series.label) + ': ' + formatted;
-      // body += ' (' + percent + '%)' ;
-      body += '</div>';
-      body += '</div></div>';
+    gRoot
+      .selectAll('.heatRect')
+      .data(drawSeries)
+      .enter()
+      .append('g')
+      .attr('class', 'heatRect')
+      .attr('transform', d => {
+        return 'translate(' + rectWidth * d.x + ',' + rectHeight * d.y + ')';
+      })
+      .append('rect')
+      .attr('width', rectWidth)
+      .attr('height', rectHeight)
+      .attr('fill', (d: any) => {
+        return d.z;
+      });
 
-      $tooltip.html(body).place_tt(pos.pageX + 20, pos.pageY);
-    });
+    // @ts-ignore
+    // $.plot(plotCanvas, data, options);
+    // plotCanvas.bind('plothover', (event: any, pos: any, item: any) => {
+    //   if (!item) {
+    //     $tooltip.detach();
+    //     return;
+    //   }
+
+    //   let body;
+    //   // const percent = parseFloat(item.series.percent).toFixed(2);
+    //   const formatted = ctrl.formatValue(item.series.data[0][1]);
+
+    //   body = '<div class="heatmapchart-tooltip-small"><div class="heatmapchart-tooltip-time">';
+    //   body += '<div class="heatmapchart-tooltip-value">' + _.escape(item.series.label) + ': ' + formatted;
+    //   // body += ' (' + percent + '%)' ;
+    //   body += '</div>';
+    //   body += '</div></div>';
+
+    //   $tooltip.html(body).place_tt(pos.pageX + 20, pos.pageY);
+    // });
   }
 
   function render(incrementRenderCounter: any) {

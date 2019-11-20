@@ -12,10 +12,10 @@ import _ from 'lodash';
 // @ts-ignore
 import PerfectScrollbar from './lib/perfect-scrollbar.min';
 
-angular.module('grafana.directives').directive('linechartLegend', (popoverSrv: any, $timeout: any) => {
+angular.module('grafana.directives').directive('heatmapchartLegend', (popoverSrv: any, $timeout: any) => {
   return {
     link: (scope: any, elem: any) => {
-      const $container = $('<div class="linechart-legend__container"></div>');
+      const $container = $('<div class="heatmapchart-legend__container"></div>');
       let firstRender = true;
       const ctrl = scope.ctrl;
       const panel = ctrl.panel;
@@ -138,18 +138,19 @@ angular.module('grafana.directives').directive('linechartLegend', (popoverSrv: a
       }
 
       function render() {
+        return;
         if (panel.legendType === 'On graph' || !panel.legend.show) {
           $container.empty();
-          elem.find('.linechart-legend').css('padding-top', 0);
+          elem.find('.heatmapchart-legend').css('padding-top', 0);
           return;
         } else {
-          elem.find('.linechart-legend').css('padding-top', 6);
+          elem.find('.heatmapchart-legend').css('padding-top', 6);
         }
 
         if (firstRender) {
           elem.append($container);
-          $container.on('click', '.linechart-legend-icon', openColorSelector);
-          $container.on('click', '.linechart-legend-alias', toggleSeries);
+          $container.on('click', '.heatmapchart-legend-icon', openColorSelector);
+          $container.on('click', '.heatmapchart-legend-alias', toggleSeries);
           $container.on('click', 'th', sortLegend);
           firstRender = false;
         }
@@ -210,16 +211,16 @@ angular.module('grafana.directives').directive('linechartLegend', (popoverSrv: a
           //   decimal = ctrl.panel.legend.percentageDecimals;
           // }
 
-          let html = '<div class="linechart-legend-series';
+          let html = '<div class="heatmapchart-legend-series';
           if (ctrl.hiddenSeries[seriesData.label]) {
-            html += ' linechart-legend-series-hidden';
+            html += ' heatmapchart-legend-series-hidden';
           }
           html += '" data-series-index="' + i + '">';
-          html += '<span class="linechart-legend-icon" style="float:none;">';
+          html += '<span class="heatmapchart-legend-icon" style="float:none;">';
           html += '<i class="fa fa-minus pointer" style="color:' + seriesData.color + '"></i>';
           html += '</span>';
 
-          html += '<a class="linechart-legend-alias" style="float:none;">' + _.escape(seriesData.label) + '</a>';
+          html += '<a class="heatmapchart-legend-alias" style="float:none;">' + _.escape(seriesData.label) + '</a>';
 
           // if (showValues && tableLayout) {
           //   const value = seriesData.legendData;

@@ -1,9 +1,9 @@
-import { LineChartCtrl } from './linechart_ctrl';
+import { HeatmapChartCtrl } from './heatmapchart_ctrl';
 import { loadPluginCss } from 'grafana/app/plugins/sdk';
 
 loadPluginCss({
-  dark: 'plugins/grafana-linechart-panel/styles/dark.css',
-  light: 'plugins/grafana-linechart-panel/styles/light.css',
+  dark: 'plugins/grafana-heatmapchart-panel/styles/dark.css',
+  light: 'plugins/grafana-heatmapchart-panel/styles/light.css',
 });
 
-export { LineChartCtrl as PanelCtrl };
+export { HeatmapChartCtrl as PanelCtrl };

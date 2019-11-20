@@ -5,9 +5,9 @@ import kbn from 'grafana/app/core/utils/kbn';
 import TimeSeries from 'grafana/app/core/time_series';
 import rendering from './rendering';
 import './legend';
-import * as d3 from 'd3';
+// import * as d3 from 'd3';
 
-class LineChartCtrl extends MetricsPanelCtrl {
+class HeatmapChartCtrl extends MetricsPanelCtrl {
   static templateUrl = 'module.html';
   $rootScope: any;
   hiddenSeries: any;
@@ -22,13 +22,15 @@ class LineChartCtrl extends MetricsPanelCtrl {
     this.hiddenSeries = {};
 
     const panelDefaults = {
-      x_axis: 'ep',
+      x_axis: 'from',
       xColumns: [],
       // pieType: 'pie',
-      ignoreColumn: '',
-      ignoreColumns: [],
+      y_axis: 'to',
+      yColumns: [],
+      z_axis: 'heat',
+      zColumns: [],
       legend: {
-        show: true, // disable/enable legend
+        show: false, // disable/enable legend
         values: true,
       },
       links: [],
@@ -64,7 +66,7 @@ class LineChartCtrl extends MetricsPanelCtrl {
   }
 
   onInitEditMode() {
-    this.addEditorTab('Options', 'public/plugins/grafana-linechart-panel/editor.html', 2);
+    this.addEditorTab('Options', 'public/plugins/grafana-heatmapchart-panel/editor.html', 2);
     this.unitFormats = kbn.getUnitFormats();
   }
 
@@ -90,17 +92,12 @@ class LineChartCtrl extends MetricsPanelCtrl {
 
   parseSeries(series: any) {
     const seriesData = [];
-    if (this.panel.xColumns.length > 0 && this.panel.xColumns.indexOf(this.panel.x_axis) >= 0) {
+    if (series.length > 0) {
       const xProcessed = series.map(this.seriesHandler.bind(this));
       const ddd = xProcessed[0];
       if (ddd) {
         for (let i = 0; i < ddd.length; i++) {
-          seriesData.push({
-            label: ddd[i].label,
-            data: ddd[i].data,
-            color: this.panel.aliasColors[ddd[i].alias] || this.$rootScope.colors[i],
-            legendData: ddd[i].data,
-          });
+          seriesData.push(ddd[i]);
         }
       }
     }
@@ -108,12 +105,13 @@ class LineChartCtrl extends MetricsPanelCtrl {
   }
 
   onDataReceived(dataList: any) {
-    const ignoreOptions: string[] = [];
+    const columnOptions: string[] = [];
     for (let i = 0; i < dataList[0].columns.length; i++) {
-      ignoreOptions.push(dataList[0].columns[i].text);
+      columnOptions.push(dataList[0].columns[i].text);
     }
-    this.panel.xColumns = ignoreOptions.slice();
-    this.panel.ignoreColumns = ignoreOptions.slice();
+    this.panel.xColumns = columnOptions.slice();
+    this.panel.yColumns = columnOptions.slice();
+    this.panel.zColumns = columnOptions.slice();
 
     this.series = dataList;
     this.data = this.parseSeries(this.series);
@@ -127,53 +125,28 @@ class LineChartCtrl extends MetricsPanelCtrl {
     // });
 
     // series.flotpairs = series.getFlotPairs(this.panel.nullPointMode);
-    const series = [];
-    const yData: any[] = [];
-    let xData: any[] = [];
+    const series: any[] = [];
+
+    let xIndex = 0;
+    let yIndex = 0;
+    let zIndex = 0;
     for (let i = 0; i < seriesData.columns.length; i++) {
-      if (seriesData.columns[i].text !== 'Time' && seriesData.columns[i].text !== this.panel.x_axis) {
-        yData.push(
-          _.map(seriesData.rows, row => {
-            return row[i];
-          })
-        );
-      } else {
-        yData.push([]);
-        if (seriesData.columns[i].text === this.panel.x_axis) {
-          xData = _.map(seriesData.rows, row => {
-            return row[i];
-          });
-        }
+      if (seriesData.columns[i].text === this.panel.x_axis) {
+        xIndex = i;
+      }
+      if (seriesData.columns[i].text === this.panel.y_axis) {
+        yIndex = i;
+      }
+      if (seriesData.columns[i].text === this.panel.z_axis) {
+        zIndex = i;
       }
     }
-    for (let i = 0; i < seriesData.columns.length; i++) {
-      if (seriesData.columns[i].text !== 'Time' && seriesData.columns[i].text !== this.panel.x_axis) {
-        const dataSeries = _.map(yData[i], (y, d: number) => {
-          return { x: xData[d], y: y };
-        });
-        const groupedSeries = d3
-          .nest()
-          .key((d: any) => {
-            return d.x;
-          })
-          .entries(dataSeries);
-        const groupedData: any[] = [];
-        for (let j = 0; j < groupedSeries.length; j++) {
-          groupedData.push([
-            Number(groupedSeries[j].key),
-            d3.sum(
-              _.map(groupedSeries[j].values, (d: any) => {
-                return d.y;
-              })
-            ),
-          ]);
-        }
-
-        series.push({
-          label: seriesData.columns[i].text,
-          data: groupedData,
-        });
-      }
+    for (let i = 0; i < seriesData.rows.length; i++) {
+      series.push({
+        x: seriesData.rows[i][xIndex],
+        y: seriesData.rows[i][yIndex],
+        z: seriesData.rows[i][zIndex],
+      });
     }
     return series;
   }
@@ -258,4 +231,4 @@ class LineChartCtrl extends MetricsPanelCtrl {
   }
 }
 
-export { LineChartCtrl, LineChartCtrl as MetricsPanelCtrl };
+export { HeatmapChartCtrl, HeatmapChartCtrl as MetricsPanelCtrl };
