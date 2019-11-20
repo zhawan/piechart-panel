@@ -6,7 +6,7 @@ import $ from 'jquery';
 export default function link(scope: any, elem: any, attrs: any, ctrl: any) {
   let data;
   const panel = ctrl.panel;
-  elem = elem.find('.piechart-panel__chart');
+  elem = elem.find('.linechart-panel__chart');
   const $tooltip = $('<div id="tooltip">') as any;
 
   ctrl.events.on('render', () => {
@@ -176,8 +176,8 @@ export default function link(scope: any, elem: any, attrs: any, ctrl: any) {
       // const percent = parseFloat(item.series.percent).toFixed(2);
       const formatted = ctrl.formatValue(item.series.data[0][1]);
 
-      body = '<div class="piechart-tooltip-small"><div class="piechart-tooltip-time">';
-      body += '<div class="piechart-tooltip-value">' + _.escape(item.series.label) + ': ' + formatted;
+      body = '<div class="linechart-tooltip-small"><div class="linechart-tooltip-time">';
+      body += '<div class="linechart-tooltip-value">' + _.escape(item.series.label) + ': ' + formatted;
       // body += ' (' + percent + '%)' ;
       body += '</div>';
       body += '</div></div>';

@@ -1,4 +1,4 @@
-import { PieChartCtrl } from './piechart_ctrl';
+import { LineChartCtrl } from './linechart_ctrl';
 import { loadPluginCss } from 'grafana/app/plugins/sdk';
 
 loadPluginCss({
@@ -6,4 +6,4 @@ loadPluginCss({
   light: 'plugins/grafana-linechart-panel/styles/light.css',
 });
 
-export { PieChartCtrl as PanelCtrl };
+export { LineChartCtrl as PanelCtrl };

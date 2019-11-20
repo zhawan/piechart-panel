@@ -7,7 +7,7 @@ import rendering from './rendering';
 import './legend';
 import * as d3 from 'd3';
 
-class PieChartCtrl extends MetricsPanelCtrl {
+class LineChartCtrl extends MetricsPanelCtrl {
   static templateUrl = 'module.html';
   $rootScope: any;
   hiddenSeries: any;
@@ -258,4 +258,4 @@ class PieChartCtrl extends MetricsPanelCtrl {
   }
 }
 
-export { PieChartCtrl, PieChartCtrl as MetricsPanelCtrl };
+export { LineChartCtrl, LineChartCtrl as MetricsPanelCtrl };

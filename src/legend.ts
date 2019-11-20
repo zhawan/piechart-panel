@@ -12,10 +12,10 @@ import _ from 'lodash';
 // @ts-ignore
 import PerfectScrollbar from './lib/perfect-scrollbar.min';
 
-angular.module('grafana.directives').directive('piechartLegend', (popoverSrv: any, $timeout: any) => {
+angular.module('grafana.directives').directive('linechartLegend', (popoverSrv: any, $timeout: any) => {
   return {
     link: (scope: any, elem: any) => {
-      const $container = $('<div class="piechart-legend__container"></div>');
+      const $container = $('<div class="linechart-legend__container"></div>');
       let firstRender = true;
       const ctrl = scope.ctrl;
       const panel = ctrl.panel;
@@ -140,16 +140,16 @@ angular.module('grafana.directives').directive('piechartLegend', (popoverSrv: an
       function render() {
         if (panel.legendType === 'On graph' || !panel.legend.show) {
           $container.empty();
-          elem.find('.piechart-legend').css('padding-top', 0);
+          elem.find('.linechart-legend').css('padding-top', 0);
           return;
         } else {
-          elem.find('.piechart-legend').css('padding-top', 6);
+          elem.find('.linechart-legend').css('padding-top', 6);
         }
 
         if (firstRender) {
           elem.append($container);
-          $container.on('click', '.piechart-legend-icon', openColorSelector);
-          $container.on('click', '.piechart-legend-alias', toggleSeries);
+          $container.on('click', '.linechart-legend-icon', openColorSelector);
+          $container.on('click', '.linechart-legend-alias', toggleSeries);
           $container.on('click', 'th', sortLegend);
           firstRender = false;
         }
@@ -210,16 +210,16 @@ angular.module('grafana.directives').directive('piechartLegend', (popoverSrv: an
           //   decimal = ctrl.panel.legend.percentageDecimals;
           // }
 
-          let html = '<div class="piechart-legend-series';
+          let html = '<div class="linechart-legend-series';
           if (ctrl.hiddenSeries[seriesData.label]) {
-            html += ' piechart-legend-series-hidden';
+            html += ' linechart-legend-series-hidden';
           }
           html += '" data-series-index="' + i + '">';
-          html += '<span class="piechart-legend-icon" style="float:none;">';
+          html += '<span class="linechart-legend-icon" style="float:none;">';
           html += '<i class="fa fa-minus pointer" style="color:' + seriesData.color + '"></i>';
           html += '</span>';
 
-          html += '<a class="piechart-legend-alias" style="float:none;">' + _.escape(seriesData.label) + '</a>';
+          html += '<a class="linechart-legend-alias" style="float:none;">' + _.escape(seriesData.label) + '</a>';
 
           // if (showValues && tableLayout) {
           //   const value = seriesData.legendData;
