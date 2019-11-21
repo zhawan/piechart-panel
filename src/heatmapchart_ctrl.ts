@@ -95,9 +95,15 @@ class HeatmapChartCtrl extends MetricsPanelCtrl {
     if (series.length > 0) {
       const xProcessed = series.map(this.seriesHandler.bind(this));
       const ddd = xProcessed[0];
+      const calDict: any = {};
       if (ddd) {
         for (let i = 0; i < ddd.length; i++) {
-          seriesData.push(ddd[i]);
+          if (!calDict[ddd[i].x + '-' + ddd[i].y]) {
+            calDict[ddd[i].x + '-' + ddd[i].y] = { x: ddd[i].x, y: ddd[i].y, z: ddd[i].z };
+            seriesData.push(calDict[ddd[i].x + '-' + ddd[i].y]);
+          } else {
+            calDict[ddd[i].x + '-' + ddd[i].y].z += ddd[i].z;
+          }
         }
       }
     }
