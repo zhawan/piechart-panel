@@ -24,12 +24,10 @@ class LineChartCtrl extends MetricsPanelCtrl {
     const panelDefaults = {
       x_axis: 'ep',
       xColumns: [],
-      // pieType: 'pie',
       ignoreColumn: '',
       ignoreColumns: [],
       legend: {
         show: true, // disable/enable legend
-        values: true,
       },
       links: [],
       datasource: null,
@@ -41,14 +39,7 @@ class LineChartCtrl extends MetricsPanelCtrl {
       legendType: 'Under graph',
       breakPoint: '10%',
       aliasColors: {},
-      // format: 'short',
-      // valueName: 'current',
-      // strokeWidth: 1,
       fontSize: '80%',
-      combine: {
-        threshold: 0.0,
-        label: 'Others',
-      },
     };
 
     _.defaults(this.panel, panelDefaults);
@@ -121,12 +112,6 @@ class LineChartCtrl extends MetricsPanelCtrl {
   }
 
   seriesHandler(seriesData: any) {
-    // const series = new TimeSeries({
-    //   datapoints: seriesData.datapoints,
-    //   alias: seriesData.target,
-    // });
-
-    // series.flotpairs = series.getFlotPairs(this.panel.nullPointMode);
     const series = [];
     const yData: any[] = [];
     let xData: any[] = [];

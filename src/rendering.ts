@@ -1,7 +1,5 @@
 import _ from 'lodash';
-import './lib/jquery.flot.pie';
 import $ from 'jquery';
-//import './lib/jquery.flot';
 
 export default function link(scope: any, elem: any, attrs: any, ctrl: any) {
   let data;
@@ -25,7 +23,7 @@ export default function link(scope: any, elem: any, attrs: any, ctrl: any) {
       return 20;
     }
 
-    if ((ctrl.panel.legendType === 'Under graph' && ctrl.panel.legend.percentage) || ctrl.panel.legend.values) {
+    if (ctrl.panel.legendType === 'Under graph') {
       const breakPoint = parseInt(ctrl.panel.breakPoint, 10) / 100;
       const total = 23 + 20 * data.length;
       return Math.min(total, Math.floor(panelHeight * breakPoint));
@@ -33,25 +31,6 @@ export default function link(scope: any, elem: any, attrs: any, ctrl: any) {
 
     return 0;
   }
-
-  // function formatter(label: any, slice: any) {
-  //   const sliceData = slice.data[0][slice.data[0].length - 1];
-  //   let decimal = 2;
-  //   const start = `<div style="font-size:${ctrl.panel.fontSize};text-align:center;padding:2px;">${label}<br/>`;
-
-  //   if (ctrl.panel.legend.percentageDecimals) {
-  //     decimal = ctrl.panel.legend.percentageDecimals;
-  //   }
-  //   if (ctrl.panel.legend.values && ctrl.panel.legend.percentage) {
-  //     return start + ctrl.formatValue(sliceData) + '<br/>' + slice.percent.toFixed(decimal) + '%</div>';
-  //   } else if (ctrl.panel.legend.values) {
-  //     return start + ctrl.formatValue(sliceData) + '</div>';
-  //   } else if (ctrl.panel.legend.percentage) {
-  //     return start + slice.percent.toFixed(decimal) + '%</div>';
-  //   } else {
-  //     return start + '</div>';
-  //   }
-  // }
 
   function noDataPoints() {
     const html = '<div class="datapoints-warning"><span class="small">No data points</span></div>';
@@ -74,48 +53,20 @@ export default function link(scope: any, elem: any, attrs: any, ctrl: any) {
 
     plotCanvas.css(plotCss);
 
-    // const backgroundColor = $('body').css('background-color');
-
     const options = {
       series: {
-        // 只针对线的属性
         lines: {
-          // 指定两个点之间是用水平线还是垂直线连接
           steps: 0,
           show: true,
-          // 线宽度
           lineWidth: 1,
-          // 是否填充
-          fill: true,
-          // 填充色，如rgba(255, 255, 255, 0.8)
+          fill: false,
+          // eg: rgba(255, 255, 255, 0.8)
           fillColor: null,
         },
-        // 设置阴影的大小，0消除阴影
+        // 0 = no shadow
         shadowSize: 0,
-        // 鼠标悬停时的颜色
+        // mouse over color
         highlightColor: 1,
-        //  {
-        //   pie: {
-        //     radius: 1,
-        //     innerRadius: 0,
-        //     show: true,
-        //     stroke: {
-        //       color: backgroundColor,
-        //       width: parseFloat(ctrl.panel.strokeWidth).toFixed(1),
-        //     },
-        //     label: {
-        //       show: ctrl.panel.legend.show && ctrl.panel.legendType === 'On graph',
-        //       formatter: formatter,
-        //     },
-        //     highlight: {
-        //       opacity: 0.0,
-        //     },
-        //     combine: {
-        //       threshold: ctrl.panel.combine.threshold,
-        //       label: ctrl.panel.combine.label,
-        //     },
-        //   },
-        // },
       },
       grid: {
         hoverable: true,
@@ -131,10 +82,6 @@ export default function link(scope: any, elem: any, attrs: any, ctrl: any) {
       xaxes: [{ position: 'bottom' }],
       yaxes: [{ position: 'left' }],
     };
-
-    // if (panel.pieType === 'donut') {
-    //   options.series.pie.innerRadius = 0.5;
-    // }
 
     data = [];
 
@@ -173,12 +120,10 @@ export default function link(scope: any, elem: any, attrs: any, ctrl: any) {
       }
 
       let body;
-      // const percent = parseFloat(item.series.percent).toFixed(2);
       const formatted = ctrl.formatValue(item.series.data[0][1]);
 
       body = '<div class="linechart-tooltip-small"><div class="linechart-tooltip-time">';
       body += '<div class="linechart-tooltip-value">' + _.escape(item.series.label) + ': ' + formatted;
-      // body += ' (' + percent + '%)' ;
       body += '</div>';
       body += '</div></div>';
 
