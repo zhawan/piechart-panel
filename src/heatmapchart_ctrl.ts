@@ -4,8 +4,6 @@ import kbn from 'grafana/app/core/utils/kbn';
 // @ts-ignore
 import TimeSeries from 'grafana/app/core/time_series';
 import rendering from './rendering';
-import './legend';
-// import * as d3 from 'd3';
 
 class HeatmapChartCtrl extends MetricsPanelCtrl {
   static templateUrl = 'module.html';
@@ -24,15 +22,11 @@ class HeatmapChartCtrl extends MetricsPanelCtrl {
     const panelDefaults = {
       x_axis: 'from',
       xColumns: [],
-      // pieType: 'pie',
       y_axis: 'to',
       yColumns: [],
       z_axis: 'heat',
       zColumns: [],
-      legend: {
-        show: false, // disable/enable legend
-        values: true,
-      },
+
       links: [],
       datasource: null,
       maxDataPoints: 3,
@@ -40,29 +34,18 @@ class HeatmapChartCtrl extends MetricsPanelCtrl {
       targets: [{}],
       cacheTimeout: null,
       nullPointMode: 'connected',
-      legendType: 'Under graph',
       breakPoint: '10%',
       aliasColors: {},
-      // format: 'short',
-      // valueName: 'current',
-      // strokeWidth: 1,
       fontSize: '80%',
-      combine: {
-        threshold: 0.0,
-        label: 'Others',
-      },
     };
 
     _.defaults(this.panel, panelDefaults);
-    _.defaults(this.panel.legend, panelDefaults.legend);
 
     this.events.on('render', this.onRender.bind(this));
     this.events.on('data-received', this.onDataReceived.bind(this));
     this.events.on('data-error', this.onDataError.bind(this));
     this.events.on('data-snapshot-load', this.onDataReceived.bind(this));
     this.events.on('init-edit-mode', this.onInitEditMode.bind(this));
-
-    this.setLegendWidthForLegacyBrowser();
   }
 
   onInitEditMode() {
@@ -125,12 +108,6 @@ class HeatmapChartCtrl extends MetricsPanelCtrl {
   }
 
   seriesHandler(seriesData: any) {
-    // const series = new TimeSeries({
-    //   datapoints: seriesData.datapoints,
-    //   alias: seriesData.target,
-    // });
-
-    // series.flotpairs = series.getFlotPairs(this.panel.nullPointMode);
     const series: any[] = [];
 
     let xIndex = 0;
@@ -221,19 +198,6 @@ class HeatmapChartCtrl extends MetricsPanelCtrl {
       this.hiddenSeries[serie.label] = true;
     }
     this.render();
-  }
-
-  onLegendTypeChanged() {
-    this.setLegendWidthForLegacyBrowser();
-    this.render();
-  }
-
-  setLegendWidthForLegacyBrowser() {
-    // @ts-ignore
-    const isIE11 = !!window.MSInputMethodContext && !!document.documentMode;
-    if (isIE11 && this.panel.legendType === 'Right side' && !this.panel.legend.sideWidth) {
-      this.panel.legend.sideWidth = 150;
-    }
   }
 }
 
