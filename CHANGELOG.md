@@ -1,4 +1,7 @@
 # Change Log
+## [0.0.1] - 2019-11.25
+
+- change to line chart
 
 ## [1.3.9] - 2019-09-05
 
