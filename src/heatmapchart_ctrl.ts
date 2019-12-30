@@ -1,3 +1,8 @@
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
+
+
 import { MetricsPanelCtrl } from 'grafana/app/plugins/sdk';
 import _ from 'lodash';
 import kbn from 'grafana/app/core/utils/kbn';
@@ -75,17 +80,21 @@ class HeatmapChartCtrl extends MetricsPanelCtrl {
 
   parseSeries(series: any) {
     const seriesData = [];
-    if (series.length > 0) {
+    if (series && series.length > 0) {
       const xProcessed = series.map(this.seriesHandler.bind(this));
-      const ddd = xProcessed[0];
-      const calDict: any = {};
-      if (ddd) {
-        for (let i = 0; i < ddd.length; i++) {
-          if (!calDict[ddd[i].x + '-' + ddd[i].y]) {
-            calDict[ddd[i].x + '-' + ddd[i].y] = { x: ddd[i].x, y: ddd[i].y, z: ddd[i].z };
-            seriesData.push(calDict[ddd[i].x + '-' + ddd[i].y]);
-          } else {
-            calDict[ddd[i].x + '-' + ddd[i].y].z += ddd[i].z;
+      if (xProcessed) {
+        for (let j = 0; j < xProcessed.length; j++) {
+          const ddd = xProcessed[j];
+          const calDict: any = {};
+          if (ddd) {
+            for (let i = 0; i < ddd.length; i++) {
+              if (!calDict[ddd[i].x + '-' + ddd[i].y]) {
+                calDict[ddd[i].x + '-' + ddd[i].y] = { x: ddd[i].x, y: ddd[i].y, z: ddd[i].z };
+                seriesData.push(calDict[ddd[i].x + '-' + ddd[i].y]);
+              } else {
+                calDict[ddd[i].x + '-' + ddd[i].y].z += ddd[i].z;
+              }
+            }
           }
         }
       }
@@ -95,8 +104,12 @@ class HeatmapChartCtrl extends MetricsPanelCtrl {
 
   onDataReceived(dataList: any) {
     const columnOptions: string[] = [];
-    for (let i = 0; i < dataList[0].columns.length; i++) {
-      columnOptions.push(dataList[0].columns[i].text);
+    if (dataList) {
+      for (let j = 0; j < dataList.length; j++) {
+        for (let i = 0; i < dataList[j].columns.length; i++) {
+          columnOptions.push(dataList[j].columns[i].text);
+        }
+      }
     }
     this.panel.xColumns = columnOptions.slice();
     this.panel.yColumns = columnOptions.slice();

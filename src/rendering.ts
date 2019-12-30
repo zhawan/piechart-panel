@@ -1,3 +1,8 @@
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
+
+
 import _ from 'lodash';
 import $ from 'jquery';
 import * as d3 from 'd3';
@@ -24,7 +29,7 @@ export default function link(scope: any, elem: any, attrs: any, ctrl: any) {
     elem.html(html);
   }
 
-  function addPieChart() {
+  function addHeatmapChart() {
     const width = elem.width();
     const height = ctrl.height;
 
@@ -185,7 +190,7 @@ export default function link(scope: any, elem: any, attrs: any, ctrl: any) {
     if (0 === ctrl.data.length) {
       noDataPoints();
     } else {
-      addPieChart();
+      addHeatmapChart();
     }
 
     if (incrementRenderCounter) {

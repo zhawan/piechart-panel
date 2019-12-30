@@ -1,3 +1,8 @@
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
+
+
 import { HeatmapChartCtrl } from './heatmapchart_ctrl';
 import { loadPluginCss } from 'grafana/app/plugins/sdk';
 
