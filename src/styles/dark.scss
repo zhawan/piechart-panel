@@ -222,6 +222,14 @@
   overflow: hidden;
 }
 
+.ps {
+  overflow: hidden auto !important;
+}
+
+.ps__rail-y {
+  display: none !important;
+}
+
 .linechart-legend-table .linechart-legend-series:nth-child(odd) {
   background: #262628;
 }

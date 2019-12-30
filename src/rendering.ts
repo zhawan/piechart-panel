@@ -1,3 +1,8 @@
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
+
+
 import _ from 'lodash';
 import $ from 'jquery';
 
@@ -37,7 +42,7 @@ export default function link(scope: any, elem: any, attrs: any, ctrl: any) {
     elem.html(html);
   }
 
-  function addPieChart() {
+  function addLineChart() {
     const width = elem.width();
     const height = ctrl.height - getLegendHeight(ctrl.height);
 
@@ -120,7 +125,7 @@ export default function link(scope: any, elem: any, attrs: any, ctrl: any) {
       }
 
       let body;
-      const formatted = ctrl.formatValue(item.series.data[0][1]);
+      const formatted = ctrl.formatValue(item.datapoint[1]);
 
       body = '<div class="linechart-tooltip-small"><div class="linechart-tooltip-time">';
       body += '<div class="linechart-tooltip-value">' + _.escape(item.series.label) + ': ' + formatted;
@@ -141,7 +146,7 @@ export default function link(scope: any, elem: any, attrs: any, ctrl: any) {
     if (0 === ctrl.data.length) {
       noDataPoints();
     } else {
-      addPieChart();
+      addLineChart();
     }
 
     if (incrementRenderCounter) {

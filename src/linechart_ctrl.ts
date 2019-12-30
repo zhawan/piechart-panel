@@ -1,3 +1,8 @@
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
+
+
 import { MetricsPanelCtrl } from 'grafana/app/plugins/sdk';
 import _ from 'lodash';
 import kbn from 'grafana/app/core/utils/kbn';
@@ -26,6 +31,8 @@ class LineChartCtrl extends MetricsPanelCtrl {
       xColumns: [],
       ignoreColumn: '',
       ignoreColumns: [],
+      aggregation: 'sum',
+      aggregationOptions: ['sum', 'max', 'min', 'median', 'mean', 'variance', 'deviation'],
       legend: {
         show: true, // disable/enable legend
       },
@@ -81,17 +88,19 @@ class LineChartCtrl extends MetricsPanelCtrl {
 
   parseSeries(series: any) {
     const seriesData = [];
-    if (this.panel.xColumns.length > 0 && this.panel.xColumns.indexOf(this.panel.x_axis) >= 0) {
+    if (this.panel.xColumns && this.panel.xColumns.length > 0 && this.panel.xColumns && this.panel.xColumns.indexOf(this.panel.x_axis) >= 0) {
       const xProcessed = series.map(this.seriesHandler.bind(this));
-      const ddd = xProcessed[0];
-      if (ddd) {
-        for (let i = 0; i < ddd.length; i++) {
-          seriesData.push({
-            label: ddd[i].label,
-            data: ddd[i].data,
-            color: this.panel.aliasColors[ddd[i].alias] || this.$rootScope.colors[i],
-            legendData: ddd[i].data,
-          });
+      if (xProcessed) {
+        for (let j = 0; j < xProcessed.length; j++) {
+          const ddd = xProcessed[j];
+          for (let i = 0; i < ddd.length; i++) {
+            seriesData.push({
+              label: ddd[i].label,
+              data: ddd[i].data,
+              color: this.panel.aliasColors[ddd[i].alias] || this.$rootScope.colors[i],
+              legendData: ddd[i].data,
+            });
+          }
         }
       }
     }
@@ -100,8 +109,12 @@ class LineChartCtrl extends MetricsPanelCtrl {
 
   onDataReceived(dataList: any) {
     const ignoreOptions: string[] = [];
-    for (let i = 0; i < dataList[0].columns.length; i++) {
-      ignoreOptions.push(dataList[0].columns[i].text);
+    if (dataList) {
+      for (let j = 0; j < dataList.length; j++) {
+        for (let i = 0; i < dataList[j].columns.length; i++) {
+          ignoreOptions.push(dataList[j].columns[i].text);
+        }
+      }
     }
     this.panel.xColumns = ignoreOptions.slice();
     this.panel.ignoreColumns = ignoreOptions.slice();
@@ -136,6 +149,16 @@ class LineChartCtrl extends MetricsPanelCtrl {
         const dataSeries = _.map(yData[i], (y, d: number) => {
           return { x: xData[d], y: y };
         });
+        let allIsNull = true;
+        for (let j = 0; j < dataSeries.length; j++) {
+          if (dataSeries[j].y != null) {
+            allIsNull = false;
+            break;
+          }
+        }
+        if (allIsNull) {
+          continue;
+        }
         const groupedSeries = d3
           .nest()
           .key((d: any) => {
@@ -144,14 +167,89 @@ class LineChartCtrl extends MetricsPanelCtrl {
           .entries(dataSeries);
         const groupedData: any[] = [];
         for (let j = 0; j < groupedSeries.length; j++) {
-          groupedData.push([
-            Number(groupedSeries[j].key),
-            d3.sum(
-              _.map(groupedSeries[j].values, (d: any) => {
-                return d.y;
-              })
-            ),
-          ]);
+          let datToPush = [];
+          switch (this.panel.aggregation) {
+            case 'sum':
+              datToPush = [
+                Number(groupedSeries[j].key),
+                d3.sum(
+                  _.map(groupedSeries[j].values, (d: any) => {
+                    return d.y;
+                  })
+                ),
+              ];
+              break;
+            case 'max':
+              datToPush = [
+                Number(groupedSeries[j].key),
+                d3.max(
+                  _.map(groupedSeries[j].values, (d: any) => {
+                    return d.y;
+                  })
+                ),
+              ];
+              break;
+            case 'min':
+              datToPush = [
+                Number(groupedSeries[j].key),
+                d3.min(
+                  _.map(groupedSeries[j].values, (d: any) => {
+                    return d.y;
+                  })
+                ),
+              ];
+              break;
+            case 'mean':
+              datToPush = [
+                Number(groupedSeries[j].key),
+                d3.mean(
+                  _.map(groupedSeries[j].values, (d: any) => {
+                    return d.y;
+                  })
+                ),
+              ];
+              break;
+            case 'median':
+              datToPush = [
+                Number(groupedSeries[j].key),
+                d3.median(
+                  _.map(groupedSeries[j].values, (d: any) => {
+                    return d.y;
+                  })
+                ),
+              ];
+              break;
+            case 'variance':
+              datToPush = [
+                Number(groupedSeries[j].key),
+                d3.variance(
+                  _.map(groupedSeries[j].values, (d: any) => {
+                    return d.y;
+                  })
+                ),
+              ];
+              break;
+            case 'deviation':
+              datToPush = [
+                Number(groupedSeries[j].key),
+                d3.deviation(
+                  _.map(groupedSeries[j].values, (d: any) => {
+                    return d.y;
+                  })
+                ),
+              ];
+              break;
+            default:
+              datToPush = [
+                Number(groupedSeries[j].key),
+                d3.sum(
+                  _.map(groupedSeries[j].values, (d: any) => {
+                    return d.y;
+                  })
+                ),
+              ];
+          }
+          groupedData.push(datToPush);
         }
 
         series.push({
